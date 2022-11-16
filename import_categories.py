@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore', message='Unverified HTTPS request')
 ########################################################
 ####    Customer's tenant / Netskope API endpoints  ####
 ########################################################
-tenant_url = "https://" + "icarron.eu.goskope.com"
+tenant_url = "https://" + "acme.eu.goskope.com"
 
 get_urllist = tenant_url + "/api/v2/policy/urllist?pending=0"
 upload_file = tenant_url + "/api/v2/policy/urllist/file"
@@ -23,14 +23,14 @@ apply_changes = tenant_url + "/api/v2/policy/urllist/deploy"
 ########################################################
 ####                      Paths                     ####
 ########################################################
-path_temp_folder = "/Users/ycarron/Desktop/temp/"
-path_archive = "/Users/ycarron/Desktop/blacklists/blacklists/"
+path_temp_folder = "/Users/am4zzing/Desktop/temp/"
+path_archive = "/Users/am4zzing/Desktop/blacklists/blacklists/"
 
 ########################################################
 ####              Authentication headers            ####
 ########################################################
 headers = {
-      'Netskope-Api-Token': '56c1cda7ec54384d0e6c43adcfc8cda7',
+      'Netskope-Api-Token': 'add_your_token_here',
       'Accept': 'application/json',
 }
 
