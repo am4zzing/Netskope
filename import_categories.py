@@ -6,14 +6,23 @@
 ########################################################
 #!/usr/local/bin/python3
 
-import os, os.path, wget, tarfile, requests, json, urllib3, warnings
+import os
+import os.path
+import wget
+import tarfile
+import requests
+import json
+import urllib3
+import warnings
 from os import path
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 warnings.filterwarnings('ignore', message='Unverified HTTPS request')
 
 ########################################################
 ####    Customer's tenant / Netskope API endpoints  ####
 ########################################################
+
 tenant_url = "https://" + "acme.eu.goskope.com"
 
 get_urllist = tenant_url + "/api/v2/policy/urllist?pending=0"
@@ -23,12 +32,14 @@ apply_changes = tenant_url + "/api/v2/policy/urllist/deploy"
 ########################################################
 ####                      Paths                     ####
 ########################################################
+
 path_temp_folder = "/Users/ycarron/Desktop/temp/"
 path_archive = "/Users/ycarron/Desktop/blacklists/blacklists/"
 
 ########################################################
 ####              Authentication headers            ####
 ########################################################
+
 headers = {
       'Netskope-Api-Token': 'add_token_here',
       'Accept': 'application/json',
@@ -37,7 +48,9 @@ headers = {
 ########################################################
 ####              University of Toulouse            ####
 ########################################################
+
 Univ_Toulouse_URL = "http://dsi.ut-capitole.fr/blacklists/download/blacklists.tar.gz"
+
 # choose which categories do you want to import
 categories = ["adult", "dating", "malware"]
 
@@ -83,7 +96,7 @@ def get_urllist_id(urllists, urllist_name):
 
 # upload url list to Netskope
 def send_to_netskope(path, filename):
-  print("Sending the URL category:", filename, "to Netskope")
+  print("Sending the URL category:", filename)
   file = {'urllist': open(path, 'rb')}
   post = requests.post(upload_file, headers=headers, files=file, verify=False)
   if post.status_code == 200 or post.status_code == 201:
@@ -98,20 +111,27 @@ def send_to_netskope(path, filename):
 if __name__ == "__main__":
   print("Starting the import of University of Toulouse URL categories")
   print("Downloading the archive from University of Toulouse")
+  
   # download the archive
   response = wget.download(Univ_Toulouse_URL, "blacklists.tar.gz")
+  
   # open the archive
   file = tarfile.open('blacklists.tar.gz')
+  
   # extracting the archive
   file.extractall('./blacklists')
+  
   # closing the archive
   file.close()
+  
   # delete the archive
   os.remove('blacklists.tar.gz')
+  
   # check if the temporary folder exists, else create it
   if path.exists(path_temp_folder) == False:
     print("Temporary folder created!")
     os.mkdir(path_temp_folder)
+  
   # get the url categories from Netskope
   print("\nFetch the URL categories from Netskope")
   get = requests.get(get_urllist, headers=headers, verify=False)
@@ -119,6 +139,7 @@ if __name__ == "__main__":
     print("URL categories fetched: OK!")
   else:
     print("URL categories fetched: KO -> error: ", post.text)
+  
   # get the list of all files and directories
   print("Getting the list of all files and directories")
   for cat in categories:
@@ -127,12 +148,14 @@ if __name__ == "__main__":
    for filename in dir_list:
      if filename != "very_restrictive_expression" and filename != "usage" and filename != "expressions":
       convert_to_json(path_dir, filename, cat)
+  
   # parse the temporary folder and upload the url categories
   print("Parsing the temporary folder")
   new_dir_list = os.listdir(path_temp_folder)
   for filename in new_dir_list:
     path = path_temp_folder + filename
     send_to_netskope(path, filename)
+  
   # apply changes to Netskope
   print("Applying the changes to Netskope")
   post = requests.post(apply_changes, headers=headers, verify=False)
