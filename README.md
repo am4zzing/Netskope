@@ -53,9 +53,6 @@ By design, the "Adult" category is the only maintain category by the owner's.
   - MacOS: python3 import_categories.py
   - Windows OS: py import_categories.py
 
-Be careful, it's a Python v3 script. Upgrade your Python interpreter to this version.
-The script needs special commands such as "wget", "json" or "requests". You have to install all of them.
-
 7. Add the new lists to a custom category
 
 Once the script ending successfuly, you will have to create a custom category on your Netskope tenant.
