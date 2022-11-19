@@ -52,7 +52,7 @@ headers = {
 ########################################################
 
 Univ_Toulouse_URL = "http://dsi.ut-capitole.fr/blacklists/download/blacklists.tar.gz"
-# choose which categories do you want to import
+# choose which categories you want to import
 categories = ["adult", "dating", "malware"]
 
 ########################################################
