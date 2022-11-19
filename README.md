@@ -5,7 +5,15 @@ HOW DOES IT WORK?
 
 0. Prerequisites
 
+For Windows OS
+- download and install python for Windows
+https://www.python.org/downloads/windows/
 
+Add the mandatory functions
+- py -m pip install wget
+- py -m pip install requests
+- py -m pip install validators
+- py -m pip install progress
 
 1. Activate the Netskope API v2
 
