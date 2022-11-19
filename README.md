@@ -1,7 +1,11 @@
 # Netskope
-Importing University of Toulouse URL lists to Netskope tenant.
+Importing University of Toulouse URL lists to Netskope.
 
 HOW DOES IT WORK?
+
+0. Prerequisites
+
+
 
 1. Activate the Netskope API v2
 
