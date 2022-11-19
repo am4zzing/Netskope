@@ -39,11 +39,7 @@ Save the configuration in order to get the token
 
 - replace the 'add_the_token_here' by your new token under the "Authentication headers" section
 'Netskope-Api-Token': 'add_token_here'
-
 - edit the tenant_url variable under the "Customer's tenant / Netskope API endpoints" section by your own tenant
-- edit the two paths under the "Paths" section. Be careful of your OS path.
-  - "path_temp_folder" is the path for the temporary folder where the lists are conververted to JSON format
-  - "path_archive" is the path for the University of Toulouse files
 
 5. Add the University of Toulouse URL categories
 
