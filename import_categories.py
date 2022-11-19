@@ -14,7 +14,9 @@ import requests
 import json
 import urllib3
 import warnings
+import validators
 from os import path
+from progress.bar import Bar
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 warnings.filterwarnings('ignore', message='Unverified HTTPS request')
@@ -50,7 +52,6 @@ headers = {
 ########################################################
 
 Univ_Toulouse_URL = "http://dsi.ut-capitole.fr/blacklists/download/blacklists.tar.gz"
-
 # choose which categories do you want to import
 categories = ["adult", "dating", "malware"]
 
@@ -70,8 +71,21 @@ def convert_to_json(path_dir, filename, cat):
     string = "{\"items\":[{\"id\":" + str(y) + ",\"name\":\"" + full_cat_name + "\",\"data\":{\"urls\":["
   else:
     string = "{\"items\":[{\"name\":\"" + full_cat_name + "\",\"data\":{\"urls\":["
-  for i in range(len(content_list)):
-    content_list[i] = "\"" + content_list[i] + "\""
+
+  # progressing bar
+  print("Clean up the category")
+  bar = Bar("Processing " + full_cat_name , max=len(content_list))
+  i = 0
+  while i < len(content_list):
+    full_url = "http://" + content_list[i]
+
+    # check if the URL is compliance and remove blogspot website from the list  
+    if validators.url(full_url) != True or "blogspot" in content_list[i]:
+        content_list.remove(content_list[i])
+    else:
+      content_list[i] = "\"" + content_list[i] + "\""
+      i = i + 1
+    bar.next()
   s = ','.join(content_list)
   string = string + s
   string2 = "],\"type\":\"exact\"}}]}"
@@ -79,9 +93,10 @@ def convert_to_json(path_dir, filename, cat):
   file_converted = path_temp_folder + cat + "_" + filename + ".json"
   with open(file_converted, 'w') as nf:
     nf.write(string2)
-  print("File ", full_cat_name, " is now converted in JSON format: temporary folder")
+  print("\nFile ", full_cat_name, " is now converted in JSON format: temporary folder")
   nf.close()
   f.close()
+  bar.finish()
 
 # get the url category ID if exists, else return 0
 def get_urllist_id(urllists, urllist_name):
@@ -96,7 +111,7 @@ def get_urllist_id(urllists, urllist_name):
 
 # upload url list to Netskope
 def send_to_netskope(path, filename):
-  print("Sending the URL category:", filename)
+  print("Sending the URL category:", filename, "to Netskope")
   file = {'urllist': open(path, 'rb')}
   post = requests.post(upload_file, headers=headers, files=file, verify=False)
   if post.status_code == 200 or post.status_code == 201:
