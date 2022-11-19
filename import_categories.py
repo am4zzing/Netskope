@@ -25,7 +25,7 @@ warnings.filterwarnings('ignore', message='Unverified HTTPS request')
 ####    Customer's tenant / Netskope API endpoints  ####
 ########################################################
 
-tenant_url = "https://" + "acme.eu.goskope.com"
+tenant_url = "https://acme.eu.goskope.com"
 
 get_urllist = tenant_url + "/api/v2/policy/urllist?pending=0"
 upload_file = tenant_url + "/api/v2/policy/urllist/file"
