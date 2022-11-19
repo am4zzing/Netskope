@@ -54,7 +54,8 @@ For the whole list of categories, follow this link: http://dsi.ut-capitole.fr/bl
 By design, the "Adult" category is the only maintain category by the owner's.
 
 6. Launch the script
-  - python3 import_categories.py
+  - MacOS: python3 import_categories.py
+  - Windows OS: py import_categories.py
 
 Be careful, it's a Python v3 script. Upgrade your Python interpreter to this version.
 The script needs special commands such as "wget", "json" or "requests". You have to install all of them.
