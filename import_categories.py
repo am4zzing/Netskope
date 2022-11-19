@@ -73,7 +73,7 @@ def convert_to_json(path_dir, filename, cat):
     string = "{\"items\":[{\"name\":\"" + full_cat_name + "\",\"data\":{\"urls\":["
 
   # progressing bar
-  print("Clean up the category")
+  print("Cleaning up the category")
   bar = Bar("Processing " + full_cat_name , max=len(content_list))
   i = 0
   while i < len(content_list):
