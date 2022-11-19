@@ -111,7 +111,7 @@ def get_urllist_id(urllists, urllist_name):
 
 # upload url list to Netskope
 def send_to_netskope(path, filename):
-  print("Sending the URL category:", filename, "to Netskope")
+  print("Sending the URL category:", filename)
   file = {'urllist': open(path, 'rb')}
   post = requests.post(upload_file, headers=headers, files=file, verify=False)
   if post.status_code == 200 or post.status_code == 201:
@@ -153,7 +153,7 @@ if __name__ == "__main__":
   if get.status_code == 200:
     print("URL categories fetched: OK!")
   else:
-    print("URL categories fetched: KO -> error: ", post.text)
+    print("URL categories fetched: KO -> error: ", get.text)
   
   # get the list of all files and directories
   print("Getting the list of all files and directories")
