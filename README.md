@@ -1,5 +1,9 @@
 # Netskope
-Importing University of Toulouse URL lists to Netskope.
+Importing University of Toulouse URL lists to Netskope by Yuri CARRON, CISSP, ycarron@netskope.com
+
+Be informed that the first start could take at least one day.
+It comes from the URLs verification for all the categories (4k+ URLs are going to be verified).
+Then, only the differences will be push to Netskope.
 
 HOW DOES IT WORK?
 
