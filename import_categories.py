@@ -188,16 +188,14 @@ def convert_file_to_json(path_dir, filename, cat):
       i = i + 1
     bar.next()
 
-  # split large file
+  # split large file <16MB API limitation
   length = len(content_list)
   if length >= 600000:
     middle_index = length // 2
     first_half = content_list[:middle_index]
     second_half = content_list[middle_index:]
-    full_cat_name = full_cat_name + "_1"
-    create_file(filename, cat, first_half)
-    full_cat_name = full_cat_name + "_2"
-    create_file(filename, cat, second_half)
+    create_file(filename + "_1", cat, first_half)
+    create_file(filename + "_2", cat, second_half)
   else:
     create_file(filename, cat, content_list)
   f.close()
