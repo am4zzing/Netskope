@@ -2,6 +2,10 @@
 ####                                                #### 
 ####    Script developped by Yuri CARRON, CISSP     ####
 ####          Email: ycarron@netskope.com           ####
+####                                                #### 
+####                Date : 11/2022                  ####
+####                Version :v1.0                   ####
+####              Python_version :v3.x              ####
 ####                                                ####
 ########################################################
 #!/usr/local/bin/python3
