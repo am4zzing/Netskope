@@ -65,7 +65,8 @@ headers = {
 
 Univ_Toulouse_URL = "http://dsi.ut-capitole.fr/blacklists/download/blacklists.tar.gz"
 # choose which categories you want to import
-categories = ["adult", "agressif", "cryptojacking", "ddos", "drogue", "hacking", "malware", "phishing", "sect", "stalkerware", "tricheur", "warez"]
+# the adult category is already embbeded into the Netkskpe "Adult-Content Pornography" category
+categories = ["agressif","arjel","associations_religieuses","astrology","audio-video","bank","bitcoin","blog","celebrity","chat","child","cleaning","cooking","cryptojacking","dangerous_material","dating","ddos","dialer","doh","download","drogue","educational_games","examen_pix","filehosting","financial","forums","gambling","games","hacking","jobsearch","lingerie","liste_bu","malware","manga","marketingware","mixed_adult","mobile-phone","phishing","press","publicite","radio","reaffected","remote-control","sect","sexual_education","shopping","shortener","social_networks","sports","stalkerware","translation","tricheur","update","vpn","warez","webmail"]
 
 ########################################################
 ####                  Global variable               ####
