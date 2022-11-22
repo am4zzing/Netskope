@@ -263,6 +263,7 @@ if __name__ == "__main__":
   for filename in new_dir_list:
     full_path = path_temp_folder + filename
     if path.exists('blacklists_2') == False:
+      # upload url list to Netskope API
       send_to_netskope(full_path, filename)
     else:
       if filename in list_cat_changed:
