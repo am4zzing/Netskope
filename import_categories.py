@@ -2,10 +2,6 @@
 ####                                                #### 
 ####    Script developped by Yuri CARRON, CISSP     ####
 ####          Email: ycarron@netskope.com           ####
-####                                                #### 
-####                Date : 11/2022                  ####
-####                Version :v1.0                   ####
-####              Python_version :v3.x              ####
 ####                                                ####
 ########################################################
 #!/usr/local/bin/python3
@@ -71,11 +67,34 @@ Univ_Toulouse_URL = "http://dsi.ut-capitole.fr/blacklists/download/blacklists.ta
 # choose which categories you want to import
 categories = ["adult", "agressif", "cryptojacking", "ddos", "drogue", "hacking", "malware", "phishing", "sect", "stalkerware", "tricheur", "warez"]
 
+########################################################
+####                  Global variable               ####
+########################################################
+
 list_cat_changed = []
 
 ########################################################
 ####                   Functions                    ####
 ########################################################
+
+# append the new list to the old JSON file
+def contact_diff_to_json(diff, json_filename):
+  text_file = open(path_temp_folder + json_filename, "r")
+  i = 0
+  while i < len(mylist):
+    full_url = "http://" + mylist[i]
+
+    # check if the URL is compliance and remove blogspot website from the list  
+    if validators.url(full_url) != True or "blogspot" in mylist[i]:
+      mylist.remove(mylist[i])
+    else:
+      mylist[i] = mylist[i]
+      i = i + 1
+    if mylist:
+      data = text_file.read()
+      index = data.find("\"urls\":[") + 8
+      output_line = data[:index] + "\"" + '\",\"'.join(mylist) + "\"," + data[index:]
+  text_file.close()
 
 # get the list of all files and directories
 def get_all_files():
@@ -96,8 +115,11 @@ def get_all_files():
                 string = string.replace('- ', '')
                 diff.append(string)
             if diff:
-              # concat the new list to the old JSON file
+              # concat the new list to the JSON file
               json_filename = cat + "_" + filename + ".json"
+              # in case of large file split, append the id
+              if filename == "adult_domains":
+                json_filename = cat + "_" + filename + "_2" + ".json"
               print("New URLs found in the category: ", cat)
               print("Adding them to the file: ", json_filename)
               contact_diff_to_json(diff, json_filename)
@@ -108,25 +130,6 @@ def get_all_files():
             return
         # convert the file to JSON format
         convert_file_to_json(path_dir, filename, cat)
-
-# concat the new list to the old JSON file
-def contact_diff_to_json(diff, json_filename):
-  text_file = open(path_temp_folder + json_filename, "r")
-  i = 0
-  while i < len(mylist):
-    full_url = "http://" + mylist[i]
-
-    # check if the URL is compliance and remove blogspot website from the list  
-    if validators.url(full_url) != True or "blogspot" in mylist[i]:
-      mylist.remove(mylist[i])
-    else:
-      mylist[i] = mylist[i]
-      i = i + 1
-    if mylist:
-      data = text_file.read()
-      index = data.find("\"urls\":[") + 8
-      output_line = data[:index] + "\"" + '\",\"'.join(mylist) + "\"," + data[index:]
-  text_file.close()
 
 # get the url categories from Netskope API
 def get_categories_from_netskope():
@@ -170,7 +173,7 @@ def create_file(filename, cat, clist):
   print("File ", full_cat_name, " is now converted in JSON format: temporary folder")
   nf.close()
 
-# convert the Univ Toulouse file to JSON file
+# convert the URL file to JSON file
 def convert_file_to_json(path_dir, filename, cat):
   full_cat_name = cat + "_" + filename
   path = path_dir + slash + filename
@@ -192,22 +195,25 @@ def convert_file_to_json(path_dir, filename, cat):
       i = i + 1
     bar.next()
 
-  # split large file <16MB API limitation
+  # split large file
   length = len(content_list)
   if length >= 600000:
     middle_index = length // 2
     first_half = content_list[:middle_index]
     second_half = content_list[middle_index:]
-    create_file(filename + "_1", cat, first_half)
-    create_file(filename + "_2", cat, second_half)
+    full_cat_name = full_cat_name + "_1"
+    create_file(filename, cat, first_half)
+    full_cat_name = full_cat_name + "_2"
+    create_file(filename, cat, second_half)
   else:
     create_file(filename, cat, content_list)
   f.close()
   bar.finish()
 
-# upload url list to Netskope API
-def send_to_netskope(path, filename):
+# upload file to Netskope API
+def send_to_netskope(filename):
   print("Sending the URL category:", filename, "to Netskope")
+  path = path_temp_folder + filename
   file_urllist = {'urllist': open(path, 'rb')}
   # bypass the Netskope API global rate limit
   time.sleep(0.5)
@@ -251,26 +257,26 @@ if __name__ == "__main__":
 
   # check if the temporary folder exists, else create it
   if path.exists(path_temp_folder) == False:
-    print("Temporary folder has been created!")
     os.mkdir(path_temp_folder)
+    print("Temporary folder has been created successfully!")
   
-  # get the list of all files and directories, and convert files to JSON format
+  # get the list of all files and directories, and convert them to JSON format
   get_all_files()
   
   # parse the temporary folder and upload the url categories
   print("Parsing the temporary folder")
   new_dir_list = os.listdir(path_temp_folder)
   for filename in new_dir_list:
-    full_path = path_temp_folder + filename
     if path.exists('blacklists_2') == False:
-      # upload url list to Netskope API
-      send_to_netskope(full_path, filename)
+      # upload file to Netskope API
+      send_to_netskope(filename)
     else:
       if filename in list_cat_changed:
-        # upload url list to Netskope API
-        send_to_netskope(full_path, filename)
+        # upload file to Netskope API
+        print("There is new URLs in: ", filename)
+        send_to_netskope(filename)
       else:
-        print("There is no change in the file: ", filename)
+        print("There is no change in: ", filename)
 
   # delete the archive if the folder exists
   if path.exists('blacklists_2') == True:
